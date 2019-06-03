@@ -5,7 +5,10 @@ import android.text.NoCopySpan;
 import android.text.Selection;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputConnectionWrapper;
@@ -36,6 +39,42 @@ public class SpXEditText extends android.support.v7.widget.AppCompatEditText {
         List<NoCopySpan> watchers = new ArrayList<>();
         watchers.add(new SpanChangedWatcher());
         setEditableFactory(new SpXEditableFactory(watchers));
+        setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onTextContextMenuItem(int id) {
+        return true;
+    }
+
+    @Override
+    public boolean isSuggestionsEnabled() {
+        return false;
+    }
+
+    boolean canPaste()
+    {
+        return false;
     }
 
     private boolean handleKeyEvent(KeyEvent keyEvent) {
