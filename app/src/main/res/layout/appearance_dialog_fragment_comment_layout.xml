@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+        <com.sunhapper.x.spedit.view.SpXEditText
+            android:id="@+id/et_comment"
+            android:background="@drawable/shape_publish_comment_view_text"
+            android:hint="据说评论才是写笔记最大的动力哟"
+            android:textSize="12sp"
+            android:textColorHint="#FFAAAAAA"
+            android:textColor="#333333"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:layout_marginLeft="10dp"
+            android:inputType="textMultiLine"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:minHeight="34dp"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_emotion"
+                android:src="@mipmap/circle_play_biaoq_nol"
+                android:layout_marginLeft="10dp"
+                android:layout_width="29dp"
+                android:layout_height="29dp" />
+            <TextView
+                android:id="@+id/tv_send"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:text="发送"
+                android:textColor="#FF6359E4"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
