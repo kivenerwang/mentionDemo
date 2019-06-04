@@ -1,6 +1,7 @@
 package com.xxyp.mentiondemo.mention;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,8 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.util.Log;
@@ -18,9 +21,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xxyp.mentiondemo.R;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -92,6 +97,19 @@ public class MentionFragment extends Fragment implements View.OnClickListener , 
 
         return spannableString;
     }
+    public static class MyClickableSpan extends ClickableSpan {
+
+        @Override
+        public void onClick(View widget) {
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setColor(Color.parseColor("#6359E4"));
+            ds.setUnderlineText(false);
+        }
+    }
 
     /**
      * 设置发布内容样式
@@ -110,9 +128,9 @@ public class MentionFragment extends Fragment implements View.OnClickListener , 
         int startIndex;
         int endIndex;
         Drawable drawable;
-
+        MyClickableSpan clickableSpan;
         while (matcher.find()) {
-            Object styleSpan = new ForegroundColorSpan(context.getResources().getColor(R.color.appearance_color_5C9));
+
             String topic = matcher.group();
             // 研祥科技大厦[地点]
             Log.i("wdd", "topic = " + topic);
@@ -121,7 +139,7 @@ public class MentionFragment extends Fragment implements View.OnClickListener , 
             spannableString.delete(spannableString.toString().indexOf(strType), spannableString.toString().indexOf(strType) + strType.length());
             source = spannableString.toString();
             Log.i("wdd", "strType  = " + strType );
-            String topicContent = topic.replace(strType, "");
+            final String topicContent = topic.replace(strType, "");
             Log.i("wdd", "topicContent  = " + topicContent);
 
             drawable = context.getResources().getDrawable(getTagImgResource(strType));
@@ -135,7 +153,15 @@ public class MentionFragment extends Fragment implements View.OnClickListener , 
             //设置图片
             spannableString.setSpan(imageSpan,  startIndex, startIndex + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             //设置字体颜色
-            spannableString.setSpan(styleSpan, startIndex, endIndex,
+            clickableSpan = new MyClickableSpan() {
+
+                @Override
+                public void onClick(View widget) {
+                    //这里需要做跳转用户的实现，先用一个Toast代替
+                    Toast.makeText(context, "点击了用户：" + topicContent, Toast.LENGTH_LONG).show();
+                }
+            };
+            spannableString.setSpan(clickableSpan, startIndex, endIndex,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannableString.delete(endIndex-1, endIndex );
         }
@@ -179,6 +205,9 @@ public class MentionFragment extends Fragment implements View.OnClickListener , 
         String strDesc = "#研祥科技大厦[地点]# #漕河泾现代服务业园区[地点]# #神仙水乳套装 神仙水100ml+乳液100ml+小样水30ml+乳30ml[商品]# 哈哈哈";
         Spannable spannableString = getPublishContent1(getContext(), strDesc, mMentionText);
         mMentionText.setText(spannableString);
+        mMentionText.setClickable(false);
+        mMentionText.setLongClickable(false);
+        mMentionText.setMovementMethod(ClickableMovementMethod.getInstance());
     }
 
     private void filterText(String strDesc) {
