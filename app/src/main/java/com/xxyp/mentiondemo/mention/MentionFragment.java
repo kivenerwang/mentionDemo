@@ -23,6 +23,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sunhapper.x.spedit.mention.span.ISpan;
+import com.sunhapper.x.spedit.mention.span.IntegratedSpan;
+import com.sunhapper.x.spedit.view.SpXEditText;
 import com.xxyp.mentiondemo.R;
 
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ public class MentionFragment extends Fragment implements View.OnClickListener , 
     private static final String REGIX = "(" + TOPIC1 + ")" + "|" + "(" + COMENT_TYPE + ")";
     private TextView mentionEditText;
     private TextView mSendView;
-    private TextView mMentionText;
+    private SpXEditText mMentionText;
     private View rootView;
     public static MentionFragment newInstance() {
 
@@ -58,46 +61,8 @@ public class MentionFragment extends Fragment implements View.OnClickListener , 
         mSendView.setOnClickListener(this);
         return rootView;
     }
-    /**
-     * 设置发布内容样式
-     * @param context context
-     * @param source source
-     * @param textView textView
-     * @return SpannableString
-     */
-    public static Spannable getPublishContent(final Context context, String source, TextView textView) {
-        SpannableStringBuilder spannableString = new SpannableStringBuilder(source);
 
-        //设置正则
-        Pattern pattern = Pattern.compile(TOPIC1);
-        Matcher matcher = pattern.matcher(source);
-        int tagType;
-        Drawable drawable;
-        Object styleSpan = new ForegroundColorSpan(context.getResources().getColor(R.color.appearance_color_5C9));
-        while (matcher.find()) {
-            String topic = matcher.group();
-            Log.i("wdd", "topic = " + topic);
-            String strType = getTopicType(topic);
-            Log.i("wdd", "strType  = " + strType );
-            String topicContent = topic.replace(strType, "");
-            Log.i("wdd", "topicContent  = " + topicContent );
-            String result = topicContent.substring(0,topicContent.length() -2);
-            Log.i("wdd", "result  = " + result );
-            SpannableString spannabletopicContent = new SpannableString(topicContent);
-
-            drawable = context.getResources().getDrawable(getTagImgResource(strType));
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-            //图片居中
-            CenterAlignImageSpan imageSpan = new CenterAlignImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
-            spannabletopicContent.setSpan(imageSpan, 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(styleSpan, 0, spannableString.length(),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableString.append(spannabletopicContent).append(" ");
-        }
-
-        return spannableString;
-    }
-    public static class MyClickableSpan extends ClickableSpan {
+    public  class MyClickableSpan extends ClickableSpan implements IntegratedSpan {
 
         @Override
         public void onClick(View widget) {
@@ -107,8 +72,20 @@ public class MentionFragment extends Fragment implements View.OnClickListener , 
         public void updateDrawState(TextPaint ds) {
             super.updateDrawState(ds);
             ds.setColor(Color.parseColor("#6359E4"));
+            ds.bgColor = 0x00000000;
             ds.setUnderlineText(false);
         }
+    }
+
+    public int getTranslateColor() {
+        return android.R.color.transparent;
+    }
+    private static CenterAlignImageSpan getImageSpan(Context context,int resId) {
+        Drawable drawable = context.getResources().getDrawable(resId);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        //图片居中
+        CenterAlignImageSpan imageSpan = new CenterAlignImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+        return imageSpan;
     }
 
     /**
@@ -118,56 +95,76 @@ public class MentionFragment extends Fragment implements View.OnClickListener , 
      * @param textView textView
      * @return SpannableString
      */
-    public static Spannable getPublishContent1(final Context context, String source, TextView textView) {
+    public Spannable getPublishContent1(final Context context, String source, TextView textView) {
         SpannableStringBuilder spannableString = new SpannableStringBuilder(source);
-
-        //设置正则
-        Pattern pattern = Pattern.compile(TOPIC1);
-        Matcher matcher = pattern.matcher(source);
-        int tagType;
-        int startIndex;
-        int endIndex;
-        Drawable drawable;
+        //话题开始位置
+        int topicStartIndex;
+        //话题结束位置
+        int topicEndIndex;
+        //尾部文案开始位置
+        int dirctionStartIndex;
+        //尾部文案结束位置
+        int dirctionEndIndex;
+        String topic;
+        //头部图片类型资源
+        CenterAlignImageSpan imageSpan;
+        //尾部图片类型资源
+        CenterAlignImageSpan imageSpan1;
         MyClickableSpan clickableSpan;
-        while (matcher.find()) {
+        //设置正则
+        try {
+            Pattern pattern = Pattern.compile(TOPIC1);
+            final Matcher matcher = pattern.matcher(source);
+            while (matcher.find()) {
+                topic = matcher.group();
+                // 研祥科技大厦[地点]
+                String strType = getTopicType(topic);
+                Log.i("wdd", "start = " + matcher.start());
+                Log.i("wdd", "end = " + matcher.end());
+                //图片居中
+                imageSpan = getImageSpan(context,getTagImgResource(strType));
+                topicStartIndex = matcher.start();
+                topicEndIndex =  matcher.end();
+                //设置图片
+                spannableString.setSpan(imageSpan,  topicStartIndex, topicStartIndex + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                //设置字体颜色
+                final int finalTopicEndIndex = topicEndIndex;
+                clickableSpan = new MyClickableSpan() {
 
-            String topic = matcher.group();
-            // 研祥科技大厦[地点]
-            Log.i("wdd", "topic = " + topic);
-            String strType = getTopicType(topic);
-
-            spannableString.delete(spannableString.toString().indexOf(strType), spannableString.toString().indexOf(strType) + strType.length());
-            source = spannableString.toString();
-            Log.i("wdd", "strType  = " + strType );
-            final String topicContent = topic.replace(strType, "");
-            Log.i("wdd", "topicContent  = " + topicContent);
-
-            drawable = context.getResources().getDrawable(getTagImgResource(strType));
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-            //图片居中
-            CenterAlignImageSpan imageSpan = new CenterAlignImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
-            startIndex = source.indexOf(topicContent);
-            endIndex = startIndex + topicContent.length();
-            Log.i("wdd", "startIndex  = " + startIndex );
-            Log.i("wdd", "endIndex  = " + endIndex );
-            //设置图片
-            spannableString.setSpan(imageSpan,  startIndex, startIndex + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            //设置字体颜色
-            clickableSpan = new MyClickableSpan() {
-
-                @Override
-                public void onClick(View widget) {
-                    //这里需要做跳转用户的实现，先用一个Toast代替
-                    Toast.makeText(context, "点击了用户：" + topicContent, Toast.LENGTH_LONG).show();
-                }
-            };
-            spannableString.setSpan(clickableSpan, startIndex, endIndex,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableString.delete(endIndex-1, endIndex );
+                    @Override
+                    public void onClick(View widget) {
+                        //这里需要做跳转用户的实现，先用一个Toast代替
+                        setEditSlection(finalTopicEndIndex);
+                    }
+                };
+                spannableString.setSpan(clickableSpan, topicStartIndex, topicEndIndex,
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                dirctionStartIndex = topicStartIndex + topic.indexOf(strType);
+                dirctionEndIndex = dirctionStartIndex + strType.length();
+                imageSpan1= getImageSpan(context,R.mipmap.test);
+                spannableString.setSpan(imageSpan1, dirctionStartIndex, dirctionEndIndex + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return spannableString;
     }
+
+    private void setEditSlection(final int end) {
+        //todo 添加异常判断
+        Log.i("wdd", "end = " + end);
+        if (end >= mentionEditText.getText().toString().length()) {
+            mMentionText.post(new Runnable() {
+                @Override
+                public void run() {
+                    mMentionText.setSelection(end);
+                }
+            });
+        }
+
+    }
+
     private static String getTopicType(String topic) {
         String type = "";
         Pattern pattern = Pattern.compile(COMENT_TYPE);
@@ -201,13 +198,17 @@ public class MentionFragment extends Fragment implements View.OnClickListener , 
 
         return R.mipmap.list_icon_address_blue;
     }
+    public interface SpanCLickLisenter {
+        void clickSpanText(int endIndex);
+    }
     private void initMetionView() {
-        String strDesc = "#研祥科技大厦[地点]# #漕河泾现代服务业园区[地点]# #神仙水乳套装 神仙水100ml+乳液100ml+小样水30ml+乳30ml[商品]# 哈哈哈";
+        String strDesc = "#研祥科技大厦[地点]# #研祥科技大厦[地点]# #神仙水乳套装 神仙水100ml+乳液100ml+小样水30ml+乳30ml[商品]# 哈哈哈";
         Spannable spannableString = getPublishContent1(getContext(), strDesc, mMentionText);
         mMentionText.setText(spannableString);
         mMentionText.setClickable(false);
         mMentionText.setLongClickable(false);
         mMentionText.setMovementMethod(ClickableMovementMethod.getInstance());
+        Log.i("wdd", "数据 ："+ mMentionText.getText().toString());
     }
 
     private void filterText(String strDesc) {

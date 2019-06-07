@@ -46,8 +46,8 @@ public class ClickableMovementMethod extends BaseMovementMethod {
                 if (action == MotionEvent.ACTION_UP) {
                     link[0].onClick(widget);
                 } else {
-                    Selection.setSelection(buffer, buffer.getSpanStart(link[0]),
-                            buffer.getSpanEnd(link[0]));
+/*                    Selection.setSelection(buffer, buffer.getSpanStart(link[0]),
+                            buffer.getSpanEnd(link[0]))*/;
                 }
                 return true;
             } else {
