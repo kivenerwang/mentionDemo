@@ -4,6 +4,8 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.NoCopySpan;
 import android.text.Selection;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ActionMode;
@@ -36,46 +38,35 @@ public class SpXEditText extends android.support.v7.widget.AppCompatEditText {
         super(context, attrs, defStyleAttr);
     }
 
+    private TextWatcher mentionCharInputWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (count == 1 && !TextUtils.isEmpty(s)) {
+                char mentionChar = s.toString().charAt(start);
+                if ("@".equals(String.valueOf(mentionChar))) {
+                    if (onMentionCharacterInputListener != null) {
+                        onMentionCharacterInputListener.onMentionCharacterInput(s);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
     {
         List<NoCopySpan> watchers = new ArrayList<>();
         watchers.add(new SpanChangedWatcher());
+        watchers.add(mentionCharInputWatcher);
         setEditableFactory(new SpXEditableFactory(watchers));
-        setCustomSelectionActionModeCallback(new ActionMode.Callback() {
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-
-            }
-        });
-    }
-
-    @Override
-    public boolean onTextContextMenuItem(int id) {
-        return true;
-    }
-
-    @Override
-    public boolean isSuggestionsEnabled() {
-        return false;
-    }
-
-    boolean canPaste()
-    {
-        return false;
     }
 
     private boolean handleKeyEvent(KeyEvent keyEvent) {
@@ -187,4 +178,33 @@ public class SpXEditText extends android.support.v7.widget.AppCompatEditText {
         }
     }
 
+    public void replace(CharSequence charSequence) {
+        Editable editable = getText();
+        insertSpannableString(editable, charSequence, 1);
+    }
+    public void insertSpannableString(Editable editable, CharSequence text, int replaceCharCount) {
+        int start = Selection.getSelectionStart(editable);
+        int end = Selection.getSelectionEnd(editable);
+        if (end < start) {
+            int temp = start;
+            start = end;
+            end = temp;
+        }
+        editable.replace(start - replaceCharCount, end, text);
+    }
+
+    public void insert(CharSequence charSequence) {
+        Editable editable = getText();
+        insertSpannableString(editable, charSequence, 0);
+    }
+
+    public interface OnMentionCharacterInputListener {
+        void onMentionCharacterInput(CharSequence mentionChar);
+    }
+
+    private OnMentionCharacterInputListener onMentionCharacterInputListener;
+
+    public void setOnMentionCharacterInputListener(OnMentionCharacterInputListener onMentionCharacterInputListener) {
+        this.onMentionCharacterInputListener = onMentionCharacterInputListener;
+    }
 }

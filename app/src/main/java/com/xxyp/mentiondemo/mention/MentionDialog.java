@@ -132,7 +132,7 @@ public class MentionDialog extends DialogFragment implements View.OnClickListene
 
     private void updateMentionUI(Intent data) {
         UserBean user = (UserBean) data.getSerializableExtra("test");
-        replace(user.getSpanableString());
+        replace(user.getSpannableString());
     }
     private void replace(CharSequence charSequence) {
         Editable editable = metComment.getText();

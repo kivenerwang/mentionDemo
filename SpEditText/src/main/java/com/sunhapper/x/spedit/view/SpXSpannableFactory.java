@@ -18,7 +18,7 @@ public class SpXSpannableFactory extends Spannable.Factory {
     }
 
     public Spannable newSpannable(@NonNull CharSequence source) {
-        SpannableStringBuilder spannableStringBuilder = new  SpannableStringBuilder();
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         for (NoCopySpan span : mNoCopySpans) {
             spannableStringBuilder.setSpan(span, 0,0,
                     Spanned.SPAN_INCLUSIVE_INCLUSIVE | Spanned.SPAN_PRIORITY);

@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="appearance_color_5C9">#5C90E1</color>
+    <color name="ui_split_line_color">#E5E5E5</color>
+    <color name="ui_split_line_linear_color">@color/ui_split_line_color</color>
+    <color name="ui_split_line_grad_color">#f7f7f7</color>
 </resources>

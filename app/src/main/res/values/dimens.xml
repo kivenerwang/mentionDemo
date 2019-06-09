@@ -1,3 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <!-- 分割线 -->
+    <dimen name="ui_split_line_height">0.25pt</dimen>
 </resources>

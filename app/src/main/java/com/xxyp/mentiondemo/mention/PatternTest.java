@@ -13,10 +13,16 @@ public class PatternTest {
 //        test1();
 //        test2();
 //        test3();
-        test4();
+//        test4();
+        test5();
         String strDesc = "#研祥科技大厦[地点]# #漕河泾现代服务业园区[地点]# #神仙水乳套装 神仙水100ml+乳液100ml+小样水30ml+乳30ml[商品]# 哈哈哈";
 //        getData(strDesc);
     }
+
+    private static void test5() {
+        
+    }
+
     private static final String TOPIC = "(?<=#)(\\S+)(?=#)";// ##话题
     private static final String TOPIC1 = "#([^#]+?)#";// ##话题
     private static final String TOPIC2 = "(?<=#)(\\S+)(?=#)";// ##话题

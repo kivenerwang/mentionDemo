@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_gravity="bottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layout_keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <include layout="@layout/ui_line_h"/>
+        <LinearLayout
+            android:id="@+id/layout_label"
+            android:layout_width="match_parent"
+            android:layout_height="44pt"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+            <ImageView
+                android:id="@+id/iv_label"
+                android:layout_width="22pt"
+                android:layout_height="22pt"
+                android:layout_marginLeft="12pt"
+                android:src="@mipmap/label_icon"
+                />
+            <ImageView
+                android:id="@+id/iv_aiti"
+                android:layout_width="22pt"
+                android:layout_height="22pt"
+                android:layout_marginLeft="22pt"
+                android:src="@mipmap/aiti_icon"
+                />
+            <ImageView
+                android:id="@+id/iv_expression"
+                android:layout_width="22pt"
+                android:layout_height="22pt"
+                android:layout_marginLeft="22pt"
+                android:src="@mipmap/expression_icon"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <com.xxyp.mentiondemo.mention.EmojiKeyboard
+        android:id="@+id/emojiKeyboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

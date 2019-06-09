@@ -1,12 +1,10 @@
 package com.xxyp.mentiondemo.mention;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.xxyp.mentiondemo.R;
 
@@ -43,10 +41,18 @@ public class MentionActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_mention);
-        Fragment fragment = MentionFragment.newInstance();
+        Fragment fragment = ReleaseFragment.newInstance();
+        Fragment fragment1 = MentionFragment.newInstance();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.mention_contain, fragment, "aa").commitAllowingStateLoss();
     }
-
-
-
+    private static final int REQUEST_CODE1 = 2;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ReleaseFragment fragment = (ReleaseFragment) getSupportFragmentManager().getFragments().get(0);
+        if (resultCode == REQUEST_CODE1) {
+            fragment.updateMentionUI(data);
+        }
+    }
 }

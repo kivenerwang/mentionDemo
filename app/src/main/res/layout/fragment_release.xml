@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!--<EditText-->
+        <!--android:id="@+id/et_title"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" />-->
+    <com.sunhapper.x.spedit.view.SpXEditText
+        android:id="@+id/mention_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_below="@id/mention_text"
+        android:layout_marginTop="30dp"
+        android:id="@+id/comment_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+    <!--<com.xxyp.mentiondemo.mention.EditStatusView-->
+        <!--android:id="@+id/edit_status"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#FFFFFF"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:visibility="invisible"-->
+        <!--tools:layout_height="46pt"-->
+        <!--tools:visibility="visible"-->
+        <!--/>-->
+</RelativeLayout>

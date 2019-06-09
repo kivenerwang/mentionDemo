@@ -44,7 +44,7 @@ public class UserBean implements IntegratedSpan, BreakableSpan,Serializable, ISp
         return isBreak;
     }
     @Override
-    public Spannable getSpanableString() {
+    public Spannable getSpannableString() {
         styleSpan = new ForegroundColorSpan(Color.BLUE);
         SpannableString spannableString = new SpannableString(getDisplayText());
         spannableString.setSpan(styleSpan, 0, spannableString.length(),
